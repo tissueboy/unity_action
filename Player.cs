@@ -22,7 +22,7 @@ public class Player : MonoBehaviour {
   private float jumpPowor = 2.0f;
   public float jumpPoworConst = 0.8f;
   public float jumpGrvity = 0.05f;
-
+  public float test;
 /*
   float wid,hei;
   float tx,ty;
@@ -100,7 +100,7 @@ public class Player : MonoBehaviour {
   void HandleTapped (object sender, System.EventArgs e)  
   {  
     // 色をランダム指定  
-    Debug.Log ("HelloWorld");
+    Debug.Log ("HelloWorld3");
   }  
 }
 
