@@ -8,7 +8,7 @@ public class PlayerControl : MonoBehaviour {
 	public float speed;
 	public Vector2 pos;
 	public Vector2 pos2;
-	public Vector2 pos3;
+	public Vector2 pos3;/**/
 	public bool isDown = false;
 	public bool isAttack = false;
 	
