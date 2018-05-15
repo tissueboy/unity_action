@@ -11,6 +11,8 @@ public class PlayerControl : MonoBehaviour {
 	public Vector2 pos3;
 	public bool isDown = false;
 	public bool isAttack = false;
+	public float jumpAfterCountMax = 1;
+	public float jumpAfterCount = 0;
 
 	private Animator anim;
 	public GameObject yajirushi;
@@ -90,7 +92,10 @@ public class PlayerControl : MonoBehaviour {
 
 		if (m_lookTarget != Vector2.zero) {
 
-			if (m_lookTarget.y < -0.3) {//下に入力
+		Debug.Log("x="+m_lookTarget.x);
+		Debug.Log("y="+m_lookTarget.y);
+
+			if (m_lookTarget.y < -0.3 && m_lookTarget.x < 0.7 && -0.7 < m_lookTarget.x ) {//下に入力
 
 				isDown = true;//下に入力をしていることを登録
 
@@ -108,17 +113,32 @@ public class PlayerControl : MonoBehaviour {
 
 				keyDownBeforePos = new Vector2 (m_lookTarget.x, m_lookTarget.y);//下に入力する前の値
 
-				//下以外は移動
-				m_rigidbody.velocity = new Vector2 (movement.x * speed, 0);
-
 				//ジャンプ中
 				if (isGrounded == false) {
+					if(jumpAfterCount < jumpAfterCountMax){
+						//右に入力
+						if ( m_lookTarget.x > 0.6 ) {
+							jumpAfterCount +=1;
+						}
+						//左に入力
+						if ( m_lookTarget.x < -0.6 ) {
+							jumpAfterCount +=1;
+						}	
+						m_rigidbody.velocity = new Vector2 (movement.x * speed * 1.5f, 0.98f);
+					}else{
 
+						m_rigidbody.velocity = new Vector2(0, m_rigidbody.velocity.y);
+
+					}
+					//m_rigidbody.useGravity = true;
 					//PlayerJump();
 					//anim.SetTrigger("jump");
 
 				}else{
 
+					m_rigidbody.velocity = new Vector2 (movement.x * speed, 0);
+
+					jumpAfterCount = 0;
 
 				}
 
@@ -146,7 +166,7 @@ public class PlayerControl : MonoBehaviour {
 
 			anim.SetBool("run", false);
 
-			if (isDown == true) {
+			if (isDown == true) {//下に入力が入っていた時
 
 				//下に入力していた時は逆のベクトルを渡す。
 				m_rigidbody.velocity = new Vector2(keyDownPos.x * -6, keyDownPos.y * -6);
@@ -161,7 +181,9 @@ public class PlayerControl : MonoBehaviour {
 
 				yajirushi.SetActive (false);//下に入力していることを非表示
 
-			}else{
+				anim.SetTrigger("jump");
+
+			}else{//下に入力がない時
 
 				if (isGrounded) {
 
@@ -171,19 +193,14 @@ public class PlayerControl : MonoBehaviour {
 				}else{
 
 					//PlayerJump();
-
-					anim.SetTrigger("jump");
-					
+					//ジャンプ中		
+					m_rigidbody.velocity = new Vector2(0, m_rigidbody.velocity.y);			
 
 				}
 			}
 		}
 	}
 	public void PlayerKeyDown(){
-
-		Debug.Log("PlayerKeyDown");
-
-
 
 		keyDownPos = new Vector2 (m_lookTarget.x, m_lookTarget.y);//離した場合のベクトルを保存
 
